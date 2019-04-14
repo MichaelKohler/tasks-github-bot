@@ -1,9 +1,6 @@
 use crate::reqwest;
 
-use std::collections::HashMap;
 use reqwest::header::AUTHORIZATION;
-
-use serde_json::Error;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Issue {
@@ -13,16 +10,12 @@ struct Issue {
 
 pub fn get_issues(auth_value: String) -> Result<(), Box<std::error::Error>> {
     let client = reqwest::Client::new();
-    let res: String = client.get("https://api.github.com/user/issues")
+    let res: Vec<Issue> = client.get("https://api.github.com/user/issues")
         .header(AUTHORIZATION, auth_value)
         .send()?
-        .text()?;
+        .json()?;
 
-    let array: Vec<Issue> = serde_json::from_str(&res)?;
-
-    for elem in array.iter() {
-        println!("{:?}", elem);
-    }
+    println!("{:?}", res);
 
     Ok(())
 }
