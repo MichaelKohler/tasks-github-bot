@@ -11,5 +11,6 @@ fn main() {
 
     println!("Getting GitHub issues...");
     let auth_value = format!("Bearer {}", token);
-    github::get_issues(auth_value);
+    let issues = github::get_issues(auth_value).unwrap();
+    println!("{:?}", issues);
 }
