@@ -4,3 +4,4 @@ extern crate reqwest;
 extern crate serde_derive;
 
 pub mod github;
+pub mod bugzilla;
