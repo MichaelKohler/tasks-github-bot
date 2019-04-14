@@ -1,0 +1,7 @@
+[package]
+name = "tasks-github-bot"
+version = "0.1.0"
+authors = ["Michael Kohler <me@michaelkohler.info>"]
+edition = "2018"
+
+[dependencies]
