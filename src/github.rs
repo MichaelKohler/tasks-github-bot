@@ -6,8 +6,8 @@ const URL: &str = "https://api.github.com/user/issues";
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Issue {
-    html_url: String,
-    title: String,
+    pub html_url: String,
+    pub title: String,
 }
 
 pub fn get_issues(auth_value: String) -> Result<Vec<Issue>, Box<std::error::Error>> {
