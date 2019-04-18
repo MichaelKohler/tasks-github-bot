@@ -12,6 +12,7 @@ pub fn update_bugzilla(all_bugs: &Vec<bugzilla::Bug>) {
         }
 
         info!("Untracked Bug: {:?}", bug);
+        github::create_issue_from_bugzilla(bug);
     }
 }
 
@@ -25,5 +26,6 @@ pub fn update_github(all_issues: Vec<github::Issue>) {
         }
 
         info!("Untracked Issue: {:?}", issue);
+        github::create_issue_from_github(issue);
     }
 }
