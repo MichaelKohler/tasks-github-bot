@@ -7,6 +7,7 @@ extern crate serde_derive;
 extern crate log;
 
 pub mod app;
-mod github;
 mod bugzilla;
+mod database;
+mod github;
 mod updater;
