@@ -12,9 +12,10 @@ pub struct Bug {
 
 pub fn get_bugs() -> Result<HashMap<String, Vec<Bug>>, Box<std::error::Error>> {
     let client = reqwest::Client::new();
+    debug!("Getting Bugzilla bugs from {}", URL);
     let res: HashMap<String, Vec<Bug>> = client.get(URL)
         .send()?
         .json()?;
-
+    info!("Got {} Bugzilla bugs", res.len());
     Ok(res)
 }
