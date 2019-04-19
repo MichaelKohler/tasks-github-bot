@@ -2,9 +2,8 @@ use crate::github;
 use crate::bugzilla;
 use crate::updater;
 
-pub fn run(token: String) {
-    let auth_value = format!("Bearer {}", token);
-    let issues = github::get_issues(auth_value).unwrap();
+pub fn run() {
+    let issues = github::get_issues().unwrap();
     updater::update_github(issues);
 
     let bugs = bugzilla::get_bugs().unwrap();
