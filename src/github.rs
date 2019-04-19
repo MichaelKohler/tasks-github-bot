@@ -23,6 +23,13 @@ struct TaskIssue {
     body: String,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct CreatedTaskIssue {
+    pub id: u32,
+    pub body: String,
+    pub html_url: String,
+}
+
 impl fmt::Display for TaskIssue {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}: {}", self.title, self.body)
@@ -47,25 +54,27 @@ pub fn get_issues() -> Result<Vec<Issue>, Box<std::error::Error>> {
     Ok(non_task_issues)
 }
 
-pub fn create_issue_from_bugzilla(bug: &bugzilla::Bug) {
+pub fn create_issue_from_bugzilla(bug: &bugzilla::Bug) -> Result<CreatedTaskIssue, Box<std::error::Error>> {
     info!("Creating issue for {}", bug.id);
     let issue = TaskIssue {
         title: format!("{}", bug.summary), // TODO: fix ownership for real...
         body: format!("https://bugzilla.mozilla.org/show_bug.cgi?id={}", bug.id),
     };
-    create_issue(issue).unwrap();
+    let created_issue = create_issue(issue)?;
+    Ok(created_issue)
 }
 
-pub fn create_issue_from_github(issue: &Issue) {
+pub fn create_issue_from_github(issue: &Issue) -> Result<CreatedTaskIssue, Box<std::error::Error>> {
     info!("Creating issue for {}", issue.html_url);
     let issue = TaskIssue {
         title: format!("{}", issue.title), // TODO: fix ownership for real...
-        body: format!("https://bugzilla.mozilla.org/show_bug.cgi?id={}", issue.html_url),
+        body: format!("{}", issue.html_url),
     };
-    create_issue(issue).unwrap();
+    let created_issue = create_issue(issue)?;
+    Ok(created_issue)
 }
 
-fn create_issue(issue: TaskIssue) -> Result<Issue, Box<std::error::Error>> {
+fn create_issue(issue: TaskIssue) -> Result<CreatedTaskIssue, Box<std::error::Error>> {
     let (github_owner, github_repo) = get_env();
     let auth_value = get_auth();
     debug!("Creating issue in {}/{}", github_owner, github_repo);
@@ -74,7 +83,7 @@ fn create_issue(issue: TaskIssue) -> Result<Issue, Box<std::error::Error>> {
     let mut params = HashMap::new();
     params.insert("title", issue.title);
     params.insert("body", issue.body);
-    let res: Issue = client.post(&url)
+    let res: CreatedTaskIssue = client.post(&url)
         .header(AUTHORIZATION, auth_value)
         .json(&params)
         .send()?
