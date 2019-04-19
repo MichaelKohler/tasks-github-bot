@@ -1098,7 +1098,7 @@ dependencies = [
 
 [[package]]
 name = "tasks-github-bot"
-version = "1.0.0"
+version = "1.0.2"
 dependencies = [
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "pretty_env_logger 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
