@@ -36,7 +36,7 @@ impl Taskable for Bug {
     }
 
     fn get_id(&self) -> String {
-        self.id.to_string()
+        self.format_body()
     }
 
     fn format_body(&self) -> String {

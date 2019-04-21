@@ -4,7 +4,6 @@ use crate::models::Bug;
 use std::collections::HashMap;
 use std::env;
 
-// TODO: use enum
 const ENV_NAME: &str = "BUGZILLA_EMAIL";
 
 pub fn get_bugs() -> Result<Vec<Bug>, Box<std::error::Error>> {
