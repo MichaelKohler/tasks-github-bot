@@ -4,9 +4,10 @@ use crate::models::Bug;
 use std::collections::HashMap;
 use std::env;
 
+// TODO: use enum
 const ENV_NAME: &str = "BUGZILLA_EMAIL";
 
-pub fn get_bugs() -> Result<HashMap<String, Vec<Bug>>, Box<std::error::Error>> {
+pub fn get_bugs() -> Result<Vec<Bug>, Box<std::error::Error>> {
     let email = match env::var(&ENV_NAME) {
       Ok(val) => val,
       Err(_e) => {
@@ -22,6 +23,10 @@ pub fn get_bugs() -> Result<HashMap<String, Vec<Bug>>, Box<std::error::Error>> {
     let res: HashMap<String, Vec<Bug>> = client.get(&formatted_url)
         .send()?
         .json()?;
-    info!("Got {} Bugzilla bugs", res.len());
-    Ok(res)
+    let assigned_bugs: Vec<Bug> = match res.get(&String::from("bugs")) {
+      Some(val) => val.to_vec(),
+      None => vec![],
+    };
+    info!("Got {} Bugzilla bugs", assigned_bugs.len());
+    Ok(assigned_bugs)
 }

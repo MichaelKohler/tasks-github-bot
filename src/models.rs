@@ -24,7 +24,7 @@ impl Taskable for Issue {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Bug {
     pub summary: String,
     pub id: u32,

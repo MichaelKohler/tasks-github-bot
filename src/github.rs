@@ -36,7 +36,7 @@ pub fn get_issues() -> Result<Vec<Issue>, Box<std::error::Error>> {
     info!("Got {} GitHub issues including already existing tasks", res.len());
     let non_task_issues: Vec<Issue> = res.into_iter()
         .filter(|issue| !issue.html_url.contains(&tasks_repo_slug))
-        .collect();;
+        .collect();
     info!("Got {} non task repo GitHub issues", non_task_issues.len());
     Ok(non_task_issues)
 }
