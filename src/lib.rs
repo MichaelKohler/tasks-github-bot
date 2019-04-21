@@ -13,3 +13,4 @@ mod bugzilla;
 mod database;
 mod github;
 mod updater;
+mod models;

@@ -1,15 +1,10 @@
 use crate::reqwest;
+use crate::models::Bug;
 
 use std::collections::HashMap;
 use std::env;
 
 const ENV_NAME: &str = "BUGZILLA_EMAIL";
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Bug {
-    pub summary: String,
-    pub id: u32,
-}
 
 pub fn get_bugs() -> Result<HashMap<String, Vec<Bug>>, Box<std::error::Error>> {
     let email = match env::var(&ENV_NAME) {

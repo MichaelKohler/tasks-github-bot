@@ -1,11 +1,11 @@
-use crate::bugzilla;
 use crate::database;
 use crate::github;
+use crate::models::{Bug,Issue};
 
 use std::collections::HashMap;
 
 // TODO: use only one function here
-pub fn update_bugzilla(all_bugs: &Vec<bugzilla::Bug>) {
+pub fn update_bugzilla(all_bugs: &Vec<Bug>) {
     let known_entries = database::get_data().unwrap();
     info!("Found {} known Bugzilla entries", known_entries.bugzilla.len());
     let mut created_issues = HashMap::new();
@@ -16,7 +16,7 @@ pub fn update_bugzilla(all_bugs: &Vec<bugzilla::Bug>) {
         }
 
         info!("Untracked Bug: {:?}", bug);
-        let created_issue = github::create_issue_from_bugzilla(bug).unwrap();
+        let created_issue = github::create_issue(bug).unwrap();
         created_issues.insert(created_issue.id, created_issue.body);
     }
 
@@ -26,7 +26,7 @@ pub fn update_bugzilla(all_bugs: &Vec<bugzilla::Bug>) {
 }
 
 // TODO: use only one function here
-pub fn update_github(all_issues: Vec<github::Issue>) {
+pub fn update_github(all_issues: Vec<Issue>) {
     let known_entries = database::get_data().unwrap();
     info!("Found {} known GitHub entries", known_entries.github.len());
     let mut created_issues = HashMap::new();
@@ -36,7 +36,7 @@ pub fn update_github(all_issues: Vec<github::Issue>) {
         }
 
         info!("Untracked Issue: {:?}", issue);
-        let created_issue = github::create_issue_from_github(issue).unwrap();
+        let created_issue = github::create_issue(issue).unwrap();
         created_issues.insert(created_issue.id, created_issue.body);
     }
 

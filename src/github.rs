@@ -1,5 +1,5 @@
 use crate::reqwest;
-use crate::bugzilla;
+use crate::models::{Issue,Taskable,CreatedTaskIssue};
 
 use reqwest::header::AUTHORIZATION;
 use std::collections::HashMap;
@@ -12,22 +12,9 @@ const GITHUB_TOKEN_ENV_NAME: &str = "GITHUB_TOKEN";
 const URL: &str = "https://api.github.com/user/issues?per_page=100";
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Issue {
-    pub html_url: String,
-    pub title: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
 struct TaskIssue {
     title: String,
     body: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct CreatedTaskIssue {
-    pub id: u32,
-    pub body: String,
-    pub html_url: String,
 }
 
 impl fmt::Display for TaskIssue {
@@ -54,37 +41,22 @@ pub fn get_issues() -> Result<Vec<Issue>, Box<std::error::Error>> {
     Ok(non_task_issues)
 }
 
-// TODO: use only one function here
-pub fn create_issue_from_bugzilla(bug: &bugzilla::Bug) -> Result<CreatedTaskIssue, Box<std::error::Error>> {
-    info!("Creating issue for {}", bug.id);
-    let issue = TaskIssue {
-        title: format!("{}", bug.summary), // TODO: fix ownership for real...
-        body: format!("https://bugzilla.mozilla.org/show_bug.cgi?id={}", bug.id),
-    };
-    let created_issue = create_issue(issue)?;
-    Ok(created_issue)
-}
-
-// TODO: use only one function here
-pub fn create_issue_from_github(issue: &Issue) -> Result<CreatedTaskIssue, Box<std::error::Error>> {
-    info!("Creating issue for {}", issue.html_url);
-    let issue = TaskIssue {
-        title: format!("{}", issue.title), // TODO: fix ownership for real...
-        body: format!("{}", issue.html_url),
-    };
-    let created_issue = create_issue(issue)?;
-    Ok(created_issue)
-}
-
-fn create_issue(issue: TaskIssue) -> Result<CreatedTaskIssue, Box<std::error::Error>> {
+pub fn create_issue(issue: impl Taskable) -> Result<CreatedTaskIssue, Box<std::error::Error>> {
+    info!("Creating issue for {}", issue.get_id());
     let (github_owner, github_repo) = get_env();
     let auth_value = get_auth();
     debug!("Creating issue in {}/{}", github_owner, github_repo);
+
+    let taskIssue = TaskIssue {
+        title: issue.get_title(),
+        body: issue.format_body(),
+    };
+
     let client = reqwest::Client::new();
     let url = format!("https://api.github.com/repos/{}/{}/issues", github_owner, github_repo);
     let mut params = HashMap::new();
-    params.insert("title", issue.title);
-    params.insert("body", issue.body);
+    params.insert("title", taskIssue.title);
+    params.insert("body", taskIssue.body);
     let res: CreatedTaskIssue = client.post(&url)
         .header(AUTHORIZATION, auth_value)
         .json(&params)
