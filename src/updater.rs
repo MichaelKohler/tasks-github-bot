@@ -4,6 +4,7 @@ use crate::github;
 
 use std::collections::HashMap;
 
+// TODO: use only one function here
 pub fn update_bugzilla(all_bugs: &Vec<bugzilla::Bug>) {
     let known_entries = database::get_data().unwrap();
     info!("Found {} known Bugzilla entries", known_entries.bugzilla.len());
@@ -24,6 +25,7 @@ pub fn update_bugzilla(all_bugs: &Vec<bugzilla::Bug>) {
     }
 }
 
+// TODO: use only one function here
 pub fn update_github(all_issues: Vec<github::Issue>) {
     let known_entries = database::get_data().unwrap();
     info!("Found {} known GitHub entries", known_entries.github.len());

@@ -54,6 +54,7 @@ pub fn get_issues() -> Result<Vec<Issue>, Box<std::error::Error>> {
     Ok(non_task_issues)
 }
 
+// TODO: use only one function here
 pub fn create_issue_from_bugzilla(bug: &bugzilla::Bug) -> Result<CreatedTaskIssue, Box<std::error::Error>> {
     info!("Creating issue for {}", bug.id);
     let issue = TaskIssue {
@@ -64,6 +65,7 @@ pub fn create_issue_from_bugzilla(bug: &bugzilla::Bug) -> Result<CreatedTaskIssu
     Ok(created_issue)
 }
 
+// TODO: use only one function here
 pub fn create_issue_from_github(issue: &Issue) -> Result<CreatedTaskIssue, Box<std::error::Error>> {
     info!("Creating issue for {}", issue.html_url);
     let issue = TaskIssue {

@@ -41,6 +41,7 @@ fn write_data(data: EntryMapping) {
     debug!("Successfully wrote to database");
 }
 
+// TODO: use only one function here
 pub fn add_created_bugzilla_issues(issues: HashMap<u32, String>) {
     debug!("Updating created Bugzilla issues in Database");
     let mut data: EntryMapping = get_data().unwrap();
@@ -49,6 +50,7 @@ pub fn add_created_bugzilla_issues(issues: HashMap<u32, String>) {
     write_data(data);
 }
 
+// TODO: use only one function here
 pub fn add_created_github_issues(issues: HashMap<u32, String>) {
     debug!("Updating created GitHub issues in Database");
     let mut data: EntryMapping = get_data().unwrap();
