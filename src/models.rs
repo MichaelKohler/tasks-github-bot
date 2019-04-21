@@ -12,15 +12,15 @@ pub struct Issue {
 
 impl Taskable for Issue {
     fn get_title(&self) -> String {
-        self.title
+        self.title.clone()
     }
 
     fn get_id(&self) -> String {
-        self.html_url
+        self.html_url.clone()
     }
 
     fn format_body(&self) -> String {
-        self.html_url
+        self.html_url.clone()
     }
 }
 
@@ -32,7 +32,7 @@ pub struct Bug {
 
 impl Taskable for Bug {
     fn get_title(&self) -> String {
-        self.summary
+        self.summary.clone()
     }
 
     fn get_id(&self) -> String {

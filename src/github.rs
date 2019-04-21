@@ -41,13 +41,13 @@ pub fn get_issues() -> Result<Vec<Issue>, Box<std::error::Error>> {
     Ok(non_task_issues)
 }
 
-pub fn create_issue(issue: impl Taskable) -> Result<CreatedTaskIssue, Box<std::error::Error>> {
+pub fn create_issue(issue: &impl Taskable) -> Result<CreatedTaskIssue, Box<std::error::Error>> {
     info!("Creating issue for {}", issue.get_id());
     let (github_owner, github_repo) = get_env();
     let auth_value = get_auth();
     debug!("Creating issue in {}/{}", github_owner, github_repo);
 
-    let taskIssue = TaskIssue {
+    let task_issue = TaskIssue {
         title: issue.get_title(),
         body: issue.format_body(),
     };
@@ -55,8 +55,8 @@ pub fn create_issue(issue: impl Taskable) -> Result<CreatedTaskIssue, Box<std::e
     let client = reqwest::Client::new();
     let url = format!("https://api.github.com/repos/{}/{}/issues", github_owner, github_repo);
     let mut params = HashMap::new();
-    params.insert("title", taskIssue.title);
-    params.insert("body", taskIssue.body);
+    params.insert("title", task_issue.title);
+    params.insert("body", task_issue.body);
     let res: CreatedTaskIssue = client.post(&url)
         .header(AUTHORIZATION, auth_value)
         .json(&params)
